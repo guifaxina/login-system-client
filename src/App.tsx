@@ -5,7 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 export function App() {
   const userFormSchema = z.object({
-    name: z.string().nonempty("Please fill in your name.").toLowerCase(),
+    name: z
+    .string()
+    .nonempty("Please fill in your name.")
+    .toLowerCase(),
 
     email: z
       .string()
