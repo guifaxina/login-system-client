@@ -2,33 +2,42 @@ import "./styles/global.css";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 export function App() {
-  const userFormSchema = z.object({
-    name: z
-    .string()
-    .nonempty("Please fill in your name.")
-    .toLowerCase(),
+  const userFormSchema = z
+    .object({
+      name: z.string().nonempty("Please fill in your name.").toLowerCase(),
 
-    email: z
-      .string()
-      .nonempty("Please fill in your email address.")
-      .regex(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/, "Invalid email address.")
-      .toLowerCase(),
+      email: z
+        .string()
+        .nonempty("Please fill in your email address.")
+        .regex(
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/,
+          "Invalid email address."
+        )
+        .toLowerCase(),
 
-    password: z
-      .string()
-      .nonempty("Please fill in your password.")
-      .regex(/^(?=.*?[A-Z])(?=.*?[^\w\s])(?=.*?\d)(.{8,})$/, "The password should contain at least 8 characters, one number, a special character and a uppercase letter."),
+      password: z
+        .string()
+        .nonempty("Please fill in your password.")
+        .regex(
+          /^(?=.*?[A-Z])(?=.*?[^\w\s])(?=.*?\d)(.{8,})$/,
+          "The password should contain at least 8 characters, one number, a special character and a uppercase letter."
+        ),
 
-    confirm_password: z
-      .string()
-      .nonempty("Please fill in your password again.")
-      .regex(/^(?=.*?[A-Z])(?=.*?[^\w\s])(?=.*?\d)(.{8,})$/)
-      
-  });
+      confirm_password: z
+        .string()
+        .nonempty("Please fill in your password again.")
+        .regex(/^(?=.*?[A-Z])(?=.*?[^\w\s])(?=.*?\d)(.{8,})$/),
+    })
+    // Checks if both users passwords match
+    .refine((data) => data.password === data.confirm_password, {
+      message: "Passwords do not match.",
+      path: ["confirm_password"],
+    });
 
-  type userFormSchema = z.infer<typeof userFormSchema>
+  type userFormSchema = z.infer<typeof userFormSchema>;
 
   const {
     formState: { errors },
@@ -38,8 +47,16 @@ export function App() {
     resolver: zodResolver(userFormSchema),
   });
 
-  function createUser(data: any) {
-    console.log(data)
+  async function createUser(userFormData: userFormSchema) {
+    const { confirm_password, ...userData } = userFormData;
+
+    try {
+      await axios.post(import.meta.env.ENDPOINT, {
+        data: userData,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -67,10 +84,11 @@ export function App() {
               className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
               {...register("name")}
             />
-            {errors.name?.message && 
+            {errors.name?.message && (
               <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
                 {errors.name.message}
-              </span>}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col">
@@ -83,10 +101,11 @@ export function App() {
               className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
               {...register("email")}
             />
-            {errors.email?.message && 
+            {errors.email?.message && (
               <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
                 {errors.email.message}
-              </span>}
+              </span>
+            )}
           </div>
           <div className="flex flex-col">
             <label htmlFor="" className="ml-4 font-semibold text-sm">
@@ -98,12 +117,13 @@ export function App() {
               className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
               {...register("password")}
             />
-            {errors.password?.message && 
+            {errors.password?.message && (
               <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
                 {errors.password.message}
-              </span>}
+              </span>
+            )}
           </div>
-          
+
           <div className="flex flex-col">
             <label htmlFor="" className="ml-4 font-semibold text-sm">
               Confirm Password
@@ -114,12 +134,11 @@ export function App() {
               className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
               {...register("confirm_password")}
             />
-            {errors.confirm_password?.message && 
-                <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
-                  {errors.confirm_password.message}
-                </span>}
-
-
+            {errors.confirm_password?.message && (
+              <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
+                {errors.confirm_password.message}
+              </span>
+            )}
           </div>
           <button
             type="submit"
@@ -141,4 +160,3 @@ export function App() {
 }
 
 export default App;
-
