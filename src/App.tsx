@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Input } from "./components/Input";
 
 export function App() {
   const userFormSchema = z
@@ -51,7 +52,7 @@ export function App() {
     const { confirm_password, ...userData } = userFormData;
 
     try {
-      await axios.post(import.meta.env.ENDPOINT, {
+      await axios.post("http://localhost:3000/api/v1/create-account", {
         data: userData,
       });
     } catch (error) {
@@ -74,72 +75,14 @@ export function App() {
             </h2>
           </div>
 
-          <div className="flex flex-col">
-            <label htmlFor="" className="ml-4 font-semibold text-sm">
-              Name
-            </label>
-            <input
-              type="name"
-              placeholder="Enter your Name"
-              className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
-              {...register("name")}
-            />
-            {errors.name?.message && (
-              <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
-                {errors.name.message}
-              </span>
-            )}
-          </div>
+          <Input type="name" errors={errors.name?.message} register={register("name")} placeholder="Enter your name" label="Name"/>
 
-          <div className="flex flex-col">
-            <label htmlFor="" className="ml-4 font-semibold text-sm">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="Enter your Email"
-              className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
-              {...register("email")}
-            />
-            {errors.email?.message && (
-              <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="" className="ml-4 font-semibold text-sm">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
-              {...register("password")}
-            />
-            {errors.password?.message && (
-              <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
-                {errors.password.message}
-              </span>
-            )}
-          </div>
+          <Input type="email" errors={errors.email?.message} register={register("email")} placeholder="Enter your email" label="Email"/>
 
-          <div className="flex flex-col">
-            <label htmlFor="" className="ml-4 font-semibold text-sm">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              className="outline outline-zinc-200 outline-1 rounded-xl px-4 h-10 text-sm"
-              {...register("confirm_password")}
-            />
-            {errors.confirm_password?.message && (
-              <span className="text-red-500 text-sm ml-4 mt-2 font-medium">
-                {errors.confirm_password.message}
-              </span>
-            )}
-          </div>
+          <Input type="password" errors={errors.password?.message} register={register("password")} placeholder="Enter your password" label="Password"/>
+          
+          <Input type="password" errors={errors.confirm_password?.message} register={register("confirm_password")} placeholder="Enter your password again" label="Confirm Password"/>
+          
           <button
             type="submit"
             className="bg-violet-500 rounded-xl p-2.5 font-semibold text-sm h-14 text-white"
