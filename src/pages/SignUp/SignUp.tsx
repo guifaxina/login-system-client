@@ -3,8 +3,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Input } from "../../components/Input";
+import { useNavigate } from "react-router-dom";
 
 export function SignUp() {
+  const navigate = useNavigate();
+
   const userFormSchema = z
     .object({
       name: z.string().nonempty("Please fill in your name.").toLowerCase(),
@@ -57,6 +60,10 @@ export function SignUp() {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  function handleSignIn() {
+    navigate("/login");
   }
 
   return (
@@ -115,7 +122,10 @@ export function SignUp() {
 
           <h3 className="flex flex-row items-center justify-center text-sm text-zinc-500">
             Already have an account?
-            <button className="ml-1 text-violet-500 font-semibold">
+            <button 
+            className="ml-1 text-violet-500 font-semibold"
+            onClick={handleSignIn}
+            >
               Sign in
             </button>
           </h3>
