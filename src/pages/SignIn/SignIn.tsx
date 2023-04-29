@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Input } from "../../components/Input";
 import { useNavigate } from "react-router-dom";
+import cookies from "js-cookie";
 
 export function SignIn() {
   const userFormSchema = z.object({
@@ -40,6 +41,10 @@ export function SignIn() {
 
   const [loading, setLoading] = useState(false);
 
+  const cookieOptions = {
+    expires: 7
+  }
+
   async function userLogin(userFormData: userFormSchema) {
     setLoading(true);
     const { ...userData } = userFormData;
@@ -49,7 +54,13 @@ export function SignIn() {
         data: userData,
       });
       
-      if (response.status === 200) return navigate("/home")
+      if (response.status === 200) {
+        const accessToken = response.headers["x-access-token"].split(" ")[1]
+        console.log(accessToken);
+        
+        cookies.set("accessToken", accessToken, { ...cookieOptions, secret: "d54257cd795d91bc9b9296c9d5cf46409d20c832363cbb201e219cf9e8f5c7e41cd882e0cd7a22805dc9f7f171265d53a6fd8d7be0dbe11344ec1db2ce341053" });
+        return navigate("/home");
+      }
       
     } catch (error) {
       console.log(error);
@@ -116,7 +127,7 @@ export function SignIn() {
               </svg>
             )}
             <span>
-              {loading ? "Accessing your account..." : "Access your account."}
+              {loading ? "Accessing your account..." : "Access your account"}
             </span>
           </button>
         </form>
