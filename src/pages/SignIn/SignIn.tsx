@@ -58,7 +58,7 @@ export function SignIn() {
         const accessToken = response.headers["x-access-token"].split(" ")[1]
         console.log(accessToken);
         
-        cookies.set("accessToken", accessToken, { ...cookieOptions, secret: "d54257cd795d91bc9b9296c9d5cf46409d20c832363cbb201e219cf9e8f5c7e41cd882e0cd7a22805dc9f7f171265d53a6fd8d7be0dbe11344ec1db2ce341053" });
+        cookies.set("accessToken", accessToken, { ...cookieOptions, secret: import.meta.env.COOKIE_SECRET });
         return navigate("/home");
       }
       
