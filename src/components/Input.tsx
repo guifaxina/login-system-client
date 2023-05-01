@@ -1,6 +1,6 @@
 interface Props {
-  errors: any,
-  register: any;
+  errors?: any,
+  register?: any;
   type: string;
   placeholder: string;
   label: string;
