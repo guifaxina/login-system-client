@@ -26,7 +26,7 @@ export function SignUp() {
         .nonempty("Please fill in your password.")
         .regex(
           /^(?=.*?[A-Z])(?=.*?[^\w\s])(?=.*?\d)(.{8,})$/,
-          "The password should contain at least 8 characters, one number, a special character and a uppercase letter."
+          "The password should contain at least 8 characters, a number, a special character and an uppercase letter."
         ),
 
       confirm_password: z
