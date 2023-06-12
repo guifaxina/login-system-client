@@ -14,7 +14,6 @@ export function RecoverPassword() {
   async function handleEmailSubmit(useFormData: any) {
     setLoading(true);
     const { email } = useFormData;
-    console.log(email)
     
     try {
       const response = await axios.post("http://localhost:3000/api/v1/recover-password", { 
